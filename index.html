@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Bot com IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
+    .chat { flex: 1; overflow-y: auto; padding: 20px; background: #f4f4f4; }
+    .msg { background: #fff; padding: 10px; border-radius: 10px; margin: 10px 0; max-width: 70%; }
+    .user { align-self: flex-end; background: #d1e7dd; }
+    .bot { align-self: flex-start; background: #cfe2ff; }
+    .input-area { display: flex; padding: 10px; background: #ddd; }
+    input { flex: 1; padding: 10px; border: none; border-radius: 5px; }
+    button { margin-left: 10px; padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="chat" id="chat"></div>
+  <div class="input-area">
+    <input type="text" id="mensagem" placeholder="Digite sua mensagem...">
+    <button onclick="enviar()">Enviar</button>
+  </div>
+  <script>
+    function adicionarMensagem(texto, tipo) {
+      const chat = document.getElementById("chat");
+      const msg = document.createElement("div");
+      msg.className = `msg ${tipo}`;
+      msg.innerText = texto;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function enviar() {
+      const input = document.getElementById("mensagem");
+      const texto = input.value.trim();
+      if (!texto) return;
+
+      adicionarMensagem(texto, "user");
+      input.value = "";
+
+      fetch("https://SEU-APP.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: texto })
+      })
+      .then(res => res.json())
+      .then(data => adicionarMensagem(data.reply, "bot"))
+      .catch(() => adicionarMensagem("Erro ao se comunicar com a IA.", "bot"));
+    }
+  </script>
+</body>
+</html>
