@@ -17,6 +17,13 @@ const openai = new OpenAI({
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message || req.body.prompt;
 
+  // Verifica se a mensagem foi enviada
+  if (!userMessage || userMessage.trim() === '') {
+    return res.json({ reply: 'Mensagem vazia. Envie algo para eu responder.' });
+  }
+
+  console.log("Mensagem recebida:", userMessage);
+
   try {
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -32,5 +39,5 @@ app.post('/chat', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log(Servidor rodando na porta ${port});
 });
